@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+#CSV Data Files
+.lab3-data
