@@ -1,0 +1,23 @@
+{
+  "name": "se3316-mtodev-lab3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martintodev/se3316-mtodev-lab3.git"
+  },
+  "author": "Martin Todev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martintodev/se3316-mtodev-lab3/issues"
+  },
+  "homepage": "https://github.com/martintodev/se3316-mtodev-lab3#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "joi": "^13.1.0"
+  }
+}
