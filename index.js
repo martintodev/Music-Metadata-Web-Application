@@ -146,7 +146,25 @@ app.get('/api/tracks/track/:track_title', (req, res) => {
     if(trackArray != []) {
         res.send(trackArray);
     } else {
-        res.status(404).send(`Track from album: ${id} was not found`);
+        res.status(404).send(`Track with name: ${id} was not found`);
+    }
+});
+
+//Get artist ID from artist name
+app.get('/api/artists/artist/:artist_name', (req, res) => {
+    const name = String.prototype.toLowerCase.call(req.params.artist_name);
+    let nameArray = [];
+
+    artistDataFinal.forEach(artist => {
+        if((String.prototype.toLowerCase.call(artist.artist_name)).includes(name)){
+            nameArray.push(artist.artist_id);
+        }
+    })
+    
+    if(nameArray != []) {
+        res.send(nameArray);
+    } else {
+        res.status(404).send(`Artist with name: ${id} was not found`);
     }
 });
 
