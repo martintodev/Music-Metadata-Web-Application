@@ -117,8 +117,7 @@ app.get('/api/tracks/album/:album_title', (req, res) => {
             if(max < 8) {
                 trackArray.push(track.track_id);
                 max++;
-            }
-            
+            } 
         }
     })
     
@@ -130,13 +129,24 @@ app.get('/api/tracks/album/:album_title', (req, res) => {
 });
 
 //Get track ID from track title
-app.get('/api/tracks/:track_id', (req, res) => {
-    const id = req.params.track_id;
-    const track = trackDataFinal.find(p => p.track_id === id);
-    if(track) {
-        res.send(track);
+app.get('/api/tracks/track/:track_title', (req, res) => {
+    const title = String.prototype.toLowerCase.call(req.params.track_title);
+    let max = 0;
+    let trackArray = [];
+
+    trackDataFinal.forEach(track => {
+        if((String.prototype.toLowerCase.call(track.track_title)).includes(title)){
+            if(max < 8) {
+                trackArray.push(track.track_id);
+                max++;
+            } 
+        }
+    })
+    
+    if(trackArray != []) {
+        res.send(trackArray);
     } else {
-        res.status(404).send(`Track with ID ${id} was not found`);
+        res.status(404).send(`Track from album: ${id} was not found`);
     }
 });
 
