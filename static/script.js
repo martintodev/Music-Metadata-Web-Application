@@ -1,0 +1,3 @@
+function getTracks() {
+    fetch("/api/")
+}

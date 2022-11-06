@@ -2,9 +2,34 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="description" content="Website for accessing artists, albums, tracks and genres from the Free Music Archive">
+        <meta name="author" content="Martin Todev">
         <title>Better Spotify</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <div class = "admin">
+            <span>
+                <input type = "text" id = "track" placeholder="Search by Track" class = "search">
+                <input type = "text" id = "artist" placeholder="Search by Artist" class = "search">
+                <input type = "text" id = "album" placeholder="Search by Album" class = "search">
+            </span>
+        </div>
+        
+
+        <div class = "playlist">
+            <div>
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Album</th>
+                        <th>Duration</th>
+                    </tr>
+                </table>
+            </div>
+            <ol id = "songs"></ol>
+        </div>
+        <script defer src = "script.js"></script>
     </body>
 </html>

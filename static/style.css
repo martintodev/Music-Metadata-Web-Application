@@ -1,0 +1,37 @@
+body {
+    font-family: Montserrat;
+    background-color: rgb(248, 237, 237);
+}
+.playlist {
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 25px;
+    padding: 20px;
+    width: 1250px;
+    height: 850px;
+    position:absolute; left:600px; top:50px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.search {
+    border: 1px solid grey;
+    border-radius: 5px;
+    height: 20px;
+    width: 7%;
+    padding: 2px 23px 2px 30px;
+    outline: 0;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+input[type="search"]::placeholder {
+    position: left;
+}
+#track {
+    position:absolute; left:750px; top:10px;
+}
+#artist {
+    position:absolute; left:1150px; top:10px;
+}
+#album {
+    position:absolute; left:1550px; top:10px;
+}
