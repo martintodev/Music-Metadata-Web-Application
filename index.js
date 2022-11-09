@@ -282,6 +282,34 @@ router.get('/tracks/:name', (req, res) => {
     })
 })
 
+//Deletes list with a given name
+router.delete('/:name', (req, res) => {
+    const newPlaylist = String.prototype.toLowerCase.call(req.params.name);
+    console.log("Playlist:", newPlaylist);
+
+    let identical = false;
+    for(let i = 0; i < playlists.length; i++) {
+        //Check if playlist exists
+        if(String.prototype.toLowerCase.call(playlists[i].playlistname) === newPlaylist) {
+            identical = true;
+            playlists.splice((i-1), (i+1));
+        }
+    } 
+
+    if(identical == false) {
+        console.log('Playlist not found');
+        res.sendStatus(404);
+    } else if(identical == true) {
+        let sql = 'DROP TABLE ' + req.params.name;
+        let query = db.query(sql, (err, results) => {
+        if(err) throw err;
+        res.send("Deleted playlist " + req.params.name);
+    })
+    }
+})
+
+
+
 //Add playlist name to table
 function addPlaylist(newList) {
     let sql = `
@@ -295,7 +323,6 @@ function addPlaylist(newList) {
         if (err) throw err;
     })
 }
-
 
 //Install the router at /api/parts
 app.use('/api/playlist', router);
