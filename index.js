@@ -1,13 +1,38 @@
 const express = require('express');
+const mysql = require('mysql2');
 const app = express();
 const port = 3000;
-
+const router = express.Router();
 const fs = require('fs');
 const csv = require('csv-parser');
+
+//Creates Connection
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'martin123',
+    database: 'playlistdata'
+});
+
+//Connect to MySQL
+db.connect(err =>  {
+    if (err) throw err;
+    console.log("Connected to MySQL");
+});
+
 
 let genreDataFinal, genreDataInitial = [];
 let artistDataFinal, artistDataInitial = [];
 let trackDataFinal, trackDataInitial = [];
+
+let playlists;
+let sqlCheck = 'SELECT * FROM playlistnames';
+let query = db.query(sqlCheck, (err, results) => {
+    if(err) throw err;
+    playlists = results;
+})
+
+
 
 fs.createReadStream('lab3-data/raw_artists.csv')
 .pipe(csv())
@@ -68,8 +93,6 @@ fs.createReadStream('lab3-data/raw_tracks.csv')
 });
 
 
-
-
 //Setup serving front-end code
 app.use('/', express.static('static'));
 
@@ -78,6 +101,32 @@ app.use((req, res, next) => { //For all routes
     console.log(`${req.method} request for ${req.url}`);
     next(); //Keep going
 });
+
+//Parse data in body as JSON
+router.use(express.json());
+
+//Create Database
+app.get('/createdb', (req, res) => {
+    let sql = 'CREATE DATABASE playlistdata';
+    db.query(sql, err => {
+        if (err) throw err;
+        res.send('Database Created');
+    })
+})
+
+//Select thing
+app.get('/getplaylist', (req, res) => {
+    let sql = 'SELECT * FROM playlistnames';
+    let query = db.query(sql, (err, results) => {
+        if(err) throw err;
+        let test = results;
+        console.log(playlists);
+        console.log(test);
+        res.send('Playlist details fetched');
+    })
+})
+
+
 
 //Gets genres
 app.get('/api/genres', (req, res) => {
@@ -167,6 +216,88 @@ app.get('/api/artists/artist/:artist_name', (req, res) => {
         res.status(404).send(`Artist with name: ${id} was not found`);
     }
 });
+
+//Create new Playlist
+router.put('/:name', (req, res) => {
+    const newPlaylist = String.prototype.toLowerCase.call(req.params.name);
+    console.log("Playlist:", newPlaylist);
+
+    let identical = false;
+    for(let i = 0; i < playlists.length; i++) {
+        //Check if playlist exists
+        if(String.prototype.toLowerCase.call(playlists[i].playlistname) === newPlaylist) {
+            identical = true;
+        }
+    } 
+
+    if(identical == false) {
+        console.log('Creating new playlist');
+        let sql = 'CREATE TABLE ' + newPlaylist + '(track_id VARCHAR(100) NOT NULL , id int AUTO_INCREMENT NOT NULL, PRIMARY KEY(id))';
+        db.query(sql, err => {
+            if (err) throw err;
+            playlists.push(newPlaylist);
+            addPlaylist(req.params.name);
+            res.send(newPlaylist + ' table created')
+        })
+    } else if(identical == true) {
+        console.log('Playlist already exists');
+        res.sendStatus(400);
+    }
+});
+
+router.post('/:name', (req, res) => {
+    const newtracks = req.body;
+    console.log("Tracks: ", newtracks);
+
+    let sqlDelete = 'TRUNCATE TABLE ' + req.params.name;
+    db.query(sqlDelete, err => {
+        if (err) throw err;
+    })
+
+    //console.log(newtracks.track_id[0]);
+    newtracks.track_id.forEach(t => {
+        let sql = `
+            INSERT INTO ` + req.params.name + `(
+                track_id
+            )
+            VALUES(
+                '${t}'
+            )`;
+        db.query(sql, err => {
+            if (err) throw err;
+                
+        })
+    }) 
+    
+    res.send('Tracks added')
+})
+
+router.get('/:name', (req, res) => {
+    let sql = 'SELECT * FROM ' + res.params.name;
+    let query = db.query(sql, (err, results) => {
+        if(err) throw err;
+        console.log(results);
+        res.send('Playlist details fetched: ' + results);
+    })
+})
+
+//Add playlist name to table
+function addPlaylist(newList) {
+    let sql = `
+    INSERT INTO playlistnames(
+        playlistname
+    )
+    VALUES(
+        '${newList}'
+    )`;
+    db.query(sql, err => {
+        if (err) throw err;
+    })
+}
+
+
+//Install the router at /api/parts
+app.use('/api/playlist', router);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
