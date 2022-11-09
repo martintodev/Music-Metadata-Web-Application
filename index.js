@@ -245,6 +245,7 @@ router.put('/:name', (req, res) => {
     }
 });
 
+//Add tracks to playlist
 router.post('/:name', (req, res) => {
     const newtracks = req.body;
     console.log("Tracks: ", newtracks);
@@ -272,12 +273,12 @@ router.post('/:name', (req, res) => {
     res.send('Tracks added')
 })
 
-router.get('/:name', (req, res) => {
-    let sql = 'SELECT * FROM ' + res.params.name;
+//Get ID's of all tracks in playlist
+router.get('/tracks/:name', (req, res) => {
+    let sql = 'SELECT * FROM ' + req.params.name;
     let query = db.query(sql, (err, results) => {
         if(err) throw err;
-        console.log(results);
-        res.send('Playlist details fetched: ' + results);
+        res.send(results);
     })
 })
 
