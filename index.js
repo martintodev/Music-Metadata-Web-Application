@@ -116,6 +116,7 @@ app.get('/createdb', (req, res) => {
 
 //Select thing
 app.get('/getplaylist', (req, res) => {
+    playlists.splice(0,1);
     console.log(playlists);
     /*let sql = 'SELECT * FROM playlistnames';
     let query = db.query(sql, (err, results) => {
@@ -233,7 +234,7 @@ router.put('/:name', (req, res) => {
 
     if(identical == false) {
         console.log('Creating new playlist');
-        let sql = 'CREATE TABLE ' + newPlaylist + '(track_id VARCHAR(100) NOT NULL , id int AUTO_INCREMENT NOT NULL, PRIMARY KEY(id))';
+        let sql = 'CREATE TABLE ' + newPlaylist + '(track_id VARCHAR(100) NOT NULL, track_duration VARCHAR(50) NOT NULL, id int AUTO_INCREMENT NOT NULL, PRIMARY KEY(id))';
         db.query(sql, err => {
             if (err) throw err;
             addPlaylist(req.params.name);
@@ -267,12 +268,15 @@ router.post('/:name', (req, res) => {
     })
 
     newtracks.track_id.forEach(t => {
+        const track = trackDataFinal.find(p => p.track_id === t);
         let sql = `
             INSERT INTO ` + req.params.name + `(
-                track_id
+                track_id,
+                track_duration
             )
             VALUES(
-                '${t}'
+                '${t}',
+                '${track.track_duration}'
             )`;
         db.query(sql, err => {
             if (err) throw err;
@@ -320,7 +324,7 @@ router.delete('/:name', (req, res) => {
         if(String.prototype.toLowerCase.call(playlists[i].playlistname) === newPlaylist) {
             identical = true;
             temp = playlists[i].id;
-            playlists.splice((i-1), (i));
+            playlists.splice((i), (1));
         }
     } 
 
@@ -340,6 +344,91 @@ router.delete('/:name', (req, res) => {
         
     }
 })
+
+//Get all playlists with # of tracks and total play time
+router.get('', (req, res) => {
+    let finalArray = [];
+    let tempArray = {
+        name: '',
+        counter: '',
+        timer: ''
+    };
+    let timer = 0;
+    let go = 0;
+
+    for(let i = 0; i < playlists.length; i++){
+        let trackStorage;
+
+        let listName = playlists[i].playlistname;
+
+        let sqlCount = 'SELECT COUNT(*) AS track_amount FROM ' + listName;
+        let sqlTracks = 'SELECT track_duration FROM ' + listName;
+
+        let query = db.query(sqlCount, (err, results) => {
+            if(err) throw err;
+            tempArray.counter = results[0].track_amount;
+        })
+        query = db.query(sqlTracks, (err, results) => {
+            if(err) throw err;
+            if(timer != 0) {
+                timer = 0;
+            }
+            trackStorage = results;
+
+            for(let j = 0; j < trackStorage.length; j++) {
+                timer += hmsToSecondsOnly(trackStorage[j].track_duration);
+            } 
+                        
+            finalArray.push({
+                name: listName,
+                counter: tempArray.counter,
+                timer: timeFormat(timer)
+            })
+            go += 1;
+            
+            if(go == playlists.length) {
+                res.send(finalArray);
+            }
+        })
+    }
+    
+    
+})
+
+
+//Convert to seconds
+function hmsToSecondsOnly(str) {
+    var p = str.split(':'),
+        s = 0, m = 1;
+
+    while (p.length > 0) {
+        s += m * parseInt(p.pop(), 10);
+        m *= 60;
+    }
+
+    return s;
+}
+
+//Convert to full time format
+function timeFormat(duration)
+{   
+    // Hours, minutes and seconds
+    var hrs = ~~(duration / 3600);
+    var mins = ~~((duration % 3600) / 60);
+    var secs = ~~duration % 60;
+
+    // Output like "1:01" or "4:03:59" or "123:03:59"
+    var ret = "";
+
+    if (hrs > 0) {
+        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+    }
+
+    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+    ret += "" + secs;
+    return ret;
+}
+
 
 //Add playlist name to table
 function addPlaylist(newList) {
