@@ -53,13 +53,13 @@ input[type="search"]::placeholder {
 .heading_title {
     padding-top: 2px;
     padding-bottom: 2px;
-    padding-right: 500px;
+    padding-right: 400px;
     font-family: Montserrat;
 }
 .heading_album {
     padding-top: 2px;
     padding-bottom: 2px;
-    padding-right: 300px;
+    padding-right: 400px;
     font-family: Montserrat;
 }
 .heading_duration {
@@ -71,7 +71,7 @@ input[type="search"]::placeholder {
 .heading_add {
     padding-top: 2px;
     padding-bottom: 2px;
-    padding-right: 50px;
+    padding-right: 30px;
     font-family: Montserrat;
 }
 #heading {
@@ -82,5 +82,8 @@ input[type="search"]::placeholder {
     height: 45px;
 }
 #data:hover {
+    background-color: rgb(175, 174, 174);
+}
+.data:hover {
     background-color: rgb(175, 174, 174);
 }

@@ -116,16 +116,14 @@ app.get('/createdb', (req, res) => {
 
 //Select thing
 app.get('/getplaylist', (req, res) => {
-    playlists.splice(0,1);
-    console.log(playlists);
-    /*let sql = 'SELECT * FROM playlistnames';
+    /*let sql = 'INSERT INTO ';
     let query = db.query(sql, (err, results) => {
         if(err) throw err;
         let test = results;
         console.log(playlists);
         console.log(test);
         res.send('Playlist details fetched');
-    }) */
+    })  */
 })
 
 
