@@ -116,14 +116,15 @@ app.get('/createdb', (req, res) => {
 
 //Select thing
 app.get('/getplaylist', (req, res) => {
-    let sql = 'SELECT * FROM playlistnames';
+    console.log(playlists);
+    /*let sql = 'SELECT * FROM playlistnames';
     let query = db.query(sql, (err, results) => {
         if(err) throw err;
         let test = results;
         console.log(playlists);
         console.log(test);
         res.send('Playlist details fetched');
-    })
+    }) */
 })
 
 
@@ -235,10 +236,20 @@ router.put('/:name', (req, res) => {
         let sql = 'CREATE TABLE ' + newPlaylist + '(track_id VARCHAR(100) NOT NULL , id int AUTO_INCREMENT NOT NULL, PRIMARY KEY(id))';
         db.query(sql, err => {
             if (err) throw err;
-            playlists.push(newPlaylist);
             addPlaylist(req.params.name);
-            res.send(newPlaylist + ' table created')
         })
+        
+        let sqlUpdate = 'SELECT * FROM playlistnames';
+        query = db.query(sqlUpdate, (err, results) => {
+            if(err) throw err;
+            let newListToAdd = {
+                playlistname: newPlaylist,
+                id: playlists[playlists.length - 1].id + 1
+            }
+            playlists.push(newListToAdd);
+            res.send(newPlaylist + ' playlist created')
+        })
+        
     } else if(identical == true) {
         console.log('Playlist already exists');
         res.sendStatus(400);
@@ -255,7 +266,6 @@ router.post('/:name', (req, res) => {
         if (err) throw err;
     })
 
-    //console.log(newtracks.track_id[0]);
     newtracks.track_id.forEach(t => {
         let sql = `
             INSERT INTO ` + req.params.name + `(
@@ -275,11 +285,27 @@ router.post('/:name', (req, res) => {
 
 //Get ID's of all tracks in playlist
 router.get('/tracks/:name', (req, res) => {
-    let sql = 'SELECT * FROM ' + req.params.name;
-    let query = db.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(results);
-    })
+    const getPlaylistTracks = String.prototype.toLowerCase.call(req.params.name);
+    console.log("Playlist:", getPlaylistTracks);
+
+    let identical = false;
+    for(let i = 0; i < playlists.length; i++) {
+        //Check if playlist exists
+        if(String.prototype.toLowerCase.call(playlists[i].playlistname) == getPlaylistTracks) {
+            identical = true;
+        }
+    } 
+
+    if(identical == false) {
+        console.log('Playlist not found');
+        res.sendStatus(404);
+    } else if(identical == true) {
+        let sql = 'SELECT * FROM ' + req.params.name;
+        let query = db.query(sql, (err, results) => {
+            if(err) throw err;
+            res.send(results);
+        })
+    }   
 })
 
 //Deletes list with a given name
@@ -287,12 +313,14 @@ router.delete('/:name', (req, res) => {
     const newPlaylist = String.prototype.toLowerCase.call(req.params.name);
     console.log("Playlist:", newPlaylist);
 
+    let temp;
     let identical = false;
     for(let i = 0; i < playlists.length; i++) {
         //Check if playlist exists
         if(String.prototype.toLowerCase.call(playlists[i].playlistname) === newPlaylist) {
             identical = true;
-            playlists.splice((i-1), (i+1));
+            temp = playlists[i].id;
+            playlists.splice((i-1), (i));
         }
     } 
 
@@ -301,14 +329,17 @@ router.delete('/:name', (req, res) => {
         res.sendStatus(404);
     } else if(identical == true) {
         let sql = 'DROP TABLE ' + req.params.name;
-        let query = db.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send("Deleted playlist " + req.params.name);
-    })
+        let sqlDeleteRow = 'DELETE FROM playlistnames WHERE id =' + temp;
+        let query = db.query(sqlDeleteRow, (err) => {
+            if(err) throw err;
+            res.send("Deleted playlist " + req.params.name);
+        })
+        query = db.query(sql, (err) => {
+            if(err) throw err;
+        })
+        
     }
 })
-
-
 
 //Add playlist name to table
 function addPlaylist(newList) {
@@ -322,6 +353,7 @@ function addPlaylist(newList) {
     db.query(sql, err => {
         if (err) throw err;
     })
+    return;
 }
 
 //Install the router at /api/parts
