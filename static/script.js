@@ -4,42 +4,9 @@ document.getElementById('searchAlbum').addEventListener('click', getByAlbumName)
 document.getElementById('addPlaylist').addEventListener('click', addNewPlaylist);
 document.getElementById('refreshPlaylists').addEventListener('click', showAllPlaylists);
 
-showAllPlaylists();
+let chosenPlaylist = '';
 
-/*function getTracks() {
-    let initialPlaylist = 'test2';
-    fetch(`/api/playlist/tracks/${initialPlaylist}`)
-    .then(res => res.json() 
-    .then(data => {
-        const t = document.getElementById('playlistTracks');
-        data.slice().reverse().forEach(e => {
-            let count = 0;
-            let trackid = e.track_id;
-            fetch(`/api/tracks/${trackid}`)
-            .then(res => res.json()
-            .then(data => {
-                const row = t.insertRow(count);
-                row.classList.add("data");
-                var cell1 = row.insertCell(0);
-                cell1.classList.add("heading_num");
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
-                var cell5 = row.insertCell(4);
-                var cell6 = row.insertCell(5);
-                cell1.innerText = data.track_id;
-                cell2.innerText = '';
-                cell3.innerText = data.track_title;
-                cell4.innerText = data.album_title;
-                cell5.innerText = data.track_duration;
-                cell6.innerText = '+';
-            })
-            )             
-            count += 1;
-        });
-    })
-    )
-} */
+showAllPlaylists();
 
 function showAllPlaylists() {
     const t = document.getElementById('allPlaylists');
@@ -52,6 +19,10 @@ function showAllPlaylists() {
             const row = document.createElement('tr');
             const item = document.createElement('th');
             item.classList.add("playlistCenter");
+            item.addEventListener("click", function(){
+                chosenPlaylist = (item.innerText.substring(0, item.innerText.indexOf(' •')));
+                getPlaylistData(chosenPlaylist);
+            });
             item.appendChild(document.createTextNode(`${e.name} • ${e.counter} songs, ${e.timer} duration`));
             row.appendChild(item);
             t.appendChild(row);
@@ -59,6 +30,7 @@ function showAllPlaylists() {
     })
     )
 }
+
 
 function addNewPlaylist() {
     const newName = document.getElementById('newplaylist').value
@@ -72,7 +44,6 @@ function addNewPlaylist() {
         .catch(console.log('Failed to get json object'))
     })
     .catch()
-    //showAllPlaylists();
 }
 
 
@@ -127,11 +98,23 @@ function getByAlbumName() {
     }
 }
 
-
+function getPlaylistData(playlist) {
+    fetch(`/api/playlist/tracks/${playlist}`)
+    .then(res => res.json()
+    .then(data => {
+        let temp = [];
+        data.forEach(e => {
+            temp.push(e.track_id)
+        })
+        populateTable(temp);
+    })
+    )
+}
 
 
 function populateTable(data) {
     const t = document.getElementById('playlistTracks');
+
     data.forEach(e => {
                 let count = 0;
                 let trackid = e;
