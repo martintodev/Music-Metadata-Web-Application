@@ -1,6 +1,8 @@
 document.getElementById('searchTrack').addEventListener('click', getByTrackName);
 document.getElementById('searchArtist').addEventListener('click', getByArtistName);
 document.getElementById('searchAlbum').addEventListener('click', getByAlbumName);
+document.getElementById('addPlaylist').addEventListener('click', addNewPlaylist);
+document.getElementById('refreshPlaylists').addEventListener('click', showAllPlaylists);
 
 showAllPlaylists();
 
@@ -41,11 +43,11 @@ showAllPlaylists();
 
 function showAllPlaylists() {
     const t = document.getElementById('allPlaylists');
+    t.replaceChildren('');
 
     fetch('/api/playlist')
     .then(res => res.json()
     .then(data => {
-        console.log(data);
         data.forEach(e => {
             const row = document.createElement('tr');
             const item = document.createElement('th');
@@ -56,6 +58,21 @@ function showAllPlaylists() {
         });
     })
     )
+}
+
+function addNewPlaylist() {
+    const newName = document.getElementById('newplaylist').value
+    console.log(newName);
+    fetch(`/api/playlist/${newName}`, {
+        method: 'PUT'
+    })
+    .then(res => {
+        res.json()
+        .then(data => console.log(data))
+        .catch(console.log('Failed to get json object'))
+    })
+    .catch()
+    //showAllPlaylists();
 }
 
 

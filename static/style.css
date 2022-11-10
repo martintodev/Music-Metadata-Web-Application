@@ -47,6 +47,10 @@ input[type="search"]::placeholder {
 #album {
     position:absolute; left:1550px; top:10px;
 }
+#newplaylist{
+    width: 150px;
+    position:absolute; left:160px; top:600px;
+}
 .heading_num {
     padding-top: 2px;
     padding-bottom: 2px;
@@ -106,7 +110,6 @@ input[type="search"]::placeholder {
     cursor: pointer;
     position: absolute; left:955px; top:8px;
 }
-
 .artistBtn {
     padding: 6px 10px;
     background: #ddd;
@@ -122,6 +125,22 @@ input[type="search"]::placeholder {
     border: none;
     cursor: pointer;
     position:absolute; left:1755px; top:8px;
+}
+.playlistBtn{
+    padding: 6px 10px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    position:absolute; left:365px; top:600px;
+}
+.refreshPlaylists {
+    padding: 6px 10px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    position:absolute; left:182px; top:8px;
 }
 .playlistCenter{
     text-align: center;
