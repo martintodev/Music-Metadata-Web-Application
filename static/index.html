@@ -10,9 +10,16 @@
     <body>
         <div class = "admin">
             <span>
-                <input type = "text" id = "track" placeholder="Search by Track" class = "search">
-                <input type = "text" id = "artist" placeholder="Search by Artist" class = "search">
-                <input type = "text" id = "album" placeholder="Search by Album" class = "search">
+                <input type = "text" id = "track" placeholder="Search by Track Name" class = "search" name = "track">
+                <button class = "trackBtn" id = "searchTrack">Search</button>
+            </span>
+            <span>
+                <input type = "text" id = "artist" placeholder="Search by Artist Name" class = "search" name = "artist">
+                <button type="submit" class = "artistBtn" id = "searchArtist">Search</button>
+            </span>
+            <span>
+                <input type = "text" id = "album" placeholder="Search by Album Name" class = "search" name = "album">
+                <button type="submit" class = "albumBtn" id = "searchAlbum">Search</button>
             </span>
         </div>
         
@@ -32,6 +39,12 @@
             </div>
             <ol id = "songs"></ol>
         </div>
+
+        <div>
+            <table id = "playlists">
+            </table>
+        </div>
+
         <script defer src = "script.js"></script>
     </body>
 </html>

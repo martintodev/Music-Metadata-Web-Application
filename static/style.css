@@ -14,11 +14,22 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
 }
+.playlists{
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 25px;
+    padding: 20px;
+    position:absolute; left:50px; top:50px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 400px;
+    height: 500px;
+}
 .search {
     border: 1px solid grey;
     border-radius: 5px;
     height: 20px;
-    width: 7%;
+    width: 150px;
     padding: 2px 23px 2px 30px;
     outline: 0;
     background-color: #f5f5f5;
@@ -86,4 +97,29 @@ input[type="search"]::placeholder {
 }
 .data:hover {
     background-color: rgb(175, 174, 174);
+}
+.trackBtn{
+    padding: 6px 10px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    position: absolute; left:955px; top:8px;
+}
+
+.artistBtn {
+    padding: 6px 10px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    position:absolute; left:1355px; top:8px;
+}
+.albumBtn {
+    padding: 6px 10px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    position:absolute; left:1755px; top:8px;
 }

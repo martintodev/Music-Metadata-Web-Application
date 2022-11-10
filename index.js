@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
+const sanitizeHtml = require('sanitize-html');
 const app = express();
 const port = 3000;
 const router = express.Router();
@@ -114,20 +115,6 @@ app.get('/createdb', (req, res) => {
     })
 })
 
-//Select thing
-app.get('/getplaylist', (req, res) => {
-    /*let sql = 'INSERT INTO ';
-    let query = db.query(sql, (err, results) => {
-        if(err) throw err;
-        let test = results;
-        console.log(playlists);
-        console.log(test);
-        res.send('Playlist details fetched');
-    })  */
-})
-
-
-
 //Gets genres
 app.get('/api/genres', (req, res) => {
     res.send(genreDataFinal);
@@ -149,6 +136,7 @@ app.get('/api/tracks/:track_id', (req, res) => {
     const id = req.params.track_id;
     const track = trackDataFinal.find(p => p.track_id === id);
     if(track) {
+        console.log(track);
         res.send(track);
     } else {
         res.status(404).send(`Track with ID ${id} was not found`);
