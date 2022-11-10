@@ -123,3 +123,7 @@ input[type="search"]::placeholder {
     cursor: pointer;
     position:absolute; left:1755px; top:8px;
 }
+.playlistCenter{
+    text-align: center;
+    padding-left: 35px;
+}

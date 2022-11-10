@@ -2,7 +2,7 @@ document.getElementById('searchTrack').addEventListener('click', getByTrackName)
 document.getElementById('searchArtist').addEventListener('click', getByArtistName);
 document.getElementById('searchAlbum').addEventListener('click', getByAlbumName);
 
-//getTracks();
+showAllPlaylists();
 
 /*function getTracks() {
     let initialPlaylist = 'test2';
@@ -38,6 +38,25 @@ document.getElementById('searchAlbum').addEventListener('click', getByAlbumName)
     })
     )
 } */
+
+function showAllPlaylists() {
+    const t = document.getElementById('allPlaylists');
+
+    fetch('/api/playlist')
+    .then(res => res.json()
+    .then(data => {
+        console.log(data);
+        data.forEach(e => {
+            const row = document.createElement('tr');
+            const item = document.createElement('th');
+            item.classList.add("playlistCenter");
+            item.appendChild(document.createTextNode(`${e.name} • ${e.counter} songs, ${e.timer} duration`));
+            row.appendChild(item);
+            t.appendChild(row);
+        });
+    })
+    )
+}
 
 
 function getByTrackName() {
