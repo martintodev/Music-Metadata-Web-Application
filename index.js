@@ -13,7 +13,8 @@ const db = mysql.createConnection({
     user: 'root',
     password: 'martin123',
     database: 'playlistdata',
-    port: '3000'
+    port: '3000',
+    multipleStatements: true;
 });
 
 //Connect to MySQL
