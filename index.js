@@ -12,7 +12,8 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'martin123',
-    database: 'playlistdata'
+    database: 'playlistdata',
+    port: '3000'
 });
 
 //Connect to MySQL
@@ -112,6 +113,15 @@ app.get('/createdb', (req, res) => {
     db.query(sql, err => {
         if (err) throw err;
         res.send('Database Created');
+    })
+})
+
+//Create Playlist
+app.get('/createpl', (req, res) => {
+    let sql = 'CREATE TABLE playlistnames(playlistname VARCHAR(100) NOT NULL, id int AUTO_INCREMENT NOT NULL, PRIMARY KEY(id))';
+    db.query(sql, err => {
+        if (err) throw err;
+        res.send('playlistnames Table Created');
     })
 })
 
